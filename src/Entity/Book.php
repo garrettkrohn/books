@@ -22,6 +22,18 @@ class Book
     #[ORM\Column]
     private ?int $user_rating = null;
 
+    /**
+     * @param string|null $author
+     * @param string|null $title
+     * @param int|null $user_rating
+     */
+    public function __construct(?string $author, ?string $title, ?int $user_rating)
+    {
+        $this->author = $author;
+        $this->title = $title;
+        $this->user_rating = $user_rating;
+    }
+
     public function getId(): ?int
     {
         return $this->id;

@@ -5,7 +5,9 @@ namespace App\Controller;
 
 
 use App\DTOs\CreateBookDto;
+use App\DTOs\EditBookDto;
 use App\Exception\InvalidRequestDataException;
+use App\Serialization\SerializationService;
 use App\Service\BookService;
 use JsonException;
 use Psr\Log\LoggerInterface;
@@ -18,9 +20,11 @@ class Controller extends ApiController
 {
 
     private BookService $bookService;
+    private SerializationService $serializationService;
 
-    public function __construct(BookService $bookService)
+    public function __construct(BookService $bookService, SerializationService $serializationService)
     {
+        parent::__construct($serializationService);
         $this->bookService = $bookService;
     }
 
@@ -41,7 +45,6 @@ class Controller extends ApiController
     }
 
     // create book
-
     /**
      * @throws JsonException
      * @throws InvalidRequestDataException
@@ -55,8 +58,38 @@ class Controller extends ApiController
     }
 
     // read books
+    #[Route('api/books', methods: ('GET'))]
+    public function getBooks(Request $request): Response
+    {
+        return $this->json($this->bookService->getBooks());
+    }
+
     // read book
+    #[Route('api/books/{id}', methods: ('GET'))]
+    public function getBook(int $id): Response
+    {
+        return $this->json($this->bookService->getBook($id));
+    }
+
     // edit book
+    /**
+     * @throws JsonException
+     * @throws InvalidRequestDataException
+     */
+    #[Route('api/books', methods: ('POST'))]
+    public function editBook(Request $request): Response
+    {
+        /** @var EditBookDto $dto */
+        $dto = $this->getValidatedDto($request, EditBookDto::class);
+        return $this->json($this->bookService->editBook($dto));
+    }
+
     // delete book
+    #[Route('api/books/{id}', methods: ('DELETE'))]
+    public function deleteBook(int $id): Response
+    {
+        return $this->json($this->bookService->deleteBook($id));
+    }
+
 
 }

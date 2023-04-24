@@ -76,7 +76,7 @@ class Controller extends ApiController
      * @throws JsonException
      * @throws InvalidRequestDataException
      */
-    #[Route('api/books', methods: ('POST'))]
+    #[Route('api/books', methods: ('PATCH'))]
     public function editBook(Request $request): Response
     {
         /** @var EditBookDto $dto */

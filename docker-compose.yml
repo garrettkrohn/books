@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+  server:
+    build:
+      context: ./
+      dockerfile: Dockerfile.dev
+    container_name: api-server
+    depends_on:
+      - postgres
+    ports:
+      - "8000:8000"
+    volumes:
+      - ".:/application"
+    environment:
+      XDEBUG_CONFIG: "remote_host=host.docker.internal"
+      PHP_IDE_CONFIG: "serverName=api"
+      LOG_LEVEL: 'debug'
+      APP_ENV: 'dev'
+      DATABASE_URL: 'postgresql://postgres:testingpass@postgres:5432/db?serverVersion=13&charset=utf8'
+
+  ###> doctrine/doctrine-bundle ###
+  postgres:
+    image: postgres
+    container_name: api-postgres
+    ports:
+      - "5433:5432"
+    environment:
+      # You should definitely change the password in production
+      POSTGRES_PASSWORD: 'testingpass'
+    volumes:
+      - api-db-data:/var/lib/postgresql/data:rw
+      # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
+      # - ./docker/db/data:/var/lib/postgresql/data:rw
+###< doctrine/doctrine-bundle ###
+
+volumes:
+  ###> doctrine/doctrine-bundle ###
+  api-db-data:
+###< doctrine/doctrine-bundle ###

@@ -28,4 +28,10 @@ class Controller extends AbstractController
         ]);
     }
 
+    // create book
+    // read books
+    // read book
+    // edit book
+    // delete book
+
 }
